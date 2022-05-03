@@ -35,6 +35,7 @@ import security.paillier.PaillierSignature;
 import security.paillier.PaillierProvider;
 import security.socialistmillionaire.alice;
 import security.socialistmillionaire.bob;
+import security.socialistmillionaire.socialist_millionaires;
 
 public class Main 
 {
@@ -86,7 +87,8 @@ public class Main
 			if (isAlice)
 			{
 				// I need to ensure that Alice has same Keys as Bob! and initialize as well
-				Niu = new alice(new Socket("192.168.1.208", 9254));
+				Niu = new alice(new Socket("0.0.0.0", 9254));
+				System.out.println("Alice Socket Set");
 				
 				// TO BE CONSISTENT I NEED TO USE KEYS FROM BOB!
 				pk = Niu.getPaiilierPublicKey();
@@ -144,10 +146,10 @@ public class Main
 				// Paillier_Test();
 				// DGK_Test();
 				//ElGamal_Test();
-				System.exit(0);
+				//System.exit(0);
 				
 				bob_socket = new ServerSocket(9254);
-				System.out.println("Bob is ready...");
+				System.out.println("Bob is ready on " + bob_socket.getLocalSocketAddress() + ":" + bob_socket.getLocalPort());
 				bob_client = bob_socket.accept();
 				andrew = new bob(bob_client, pe, DGK, el_gamal);
 				
@@ -890,6 +892,106 @@ public class Main
 		Niu.division(d, 5);//100/5 = 20
 		Niu.division(d, 25);//100/25 = 4
 	}
+
+	public static void alice_demo_DGK() throws ClassNotFoundException, IOException
+	{	
+		// Check the multiplication, DGK
+		Niu.setDGKMode(true);
+		Niu.multiplication(DGKOperations.encrypt(pubKey, new BigInteger("100")), 
+				DGKOperations.encrypt(pubKey, new BigInteger("2")));
+		Niu.multiplication(DGKOperations.encrypt(pubKey, new BigInteger("1000")), 
+				DGKOperations.encrypt(pubKey, new BigInteger("3")));
+		Niu.multiplication(DGKOperations.encrypt(pubKey, new BigInteger("1000")), 
+				DGKOperations.encrypt(pubKey, new BigInteger("5")));
+
+		// Test Protocol 3, mode doesn't matter as DGK is always used!
+		System.out.println("Protocol 3 Tests...");
+		for(BigInteger l: low)
+		{
+			System.out.println(Niu.Protocol3(l));
+		}
+		for(BigInteger l: mid)
+		{
+			System.out.println(Niu.Protocol3(l));
+		}
+		for(BigInteger l: high)
+		{
+			System.out.println(!Niu.Protocol3(l));
+		}
+		for(BigInteger l: high)
+		{
+			System.out.println(!Niu.Protocol3(l));
+		}
+		for(BigInteger l: mid)
+		{
+			System.out.println(!Niu.Protocol3(l));
+		}
+		
+		// Test Protocol 1
+		System.out.println("Protocol 1 Tests...");
+		for(BigInteger l: low)
+		{
+			System.out.println(Niu.Protocol1(l));
+		}
+		for(BigInteger l: mid)
+		{
+			System.out.println(Niu.Protocol1(l));
+		}
+		for(BigInteger l: high)
+		{
+			System.out.println(!Niu.Protocol1(l));
+		}
+		
+		// Test Modified Protocol 3, mode doesn't matter as DGK is always used!
+		System.out.println("Modified Protocol 3 Tests...");
+		for(BigInteger l: low)
+		{
+			System.out.println(Niu.Modified_Protocol3(l));
+		}
+		for(BigInteger l: mid)
+		{
+			System.out.println(Niu.Modified_Protocol3(l));
+		}
+		for(BigInteger l: high)
+		{
+			System.out.println(!Niu.Modified_Protocol3(l));
+		}
+		
+
+		
+		// DGK
+		System.out.println("Protocol 2 Tests...DGK...SKIPPED!");
+		
+		
+		// DGK
+		// Seems like Protocol 4 ONLY works with [X > Y]
+		Niu.setDGKMode(true);
+		System.out.println("Protocol 4 Tests...DGK");
+		for (int i = 0; i < low.length;i++)
+		{
+			System.out.println(!Niu.Protocol4(DGKOperations.encrypt(pubKey, low[i]), 
+					DGKOperations.encrypt(pubKey, mid[i])));
+			System.out.println(!Niu.Protocol4(DGKOperations.encrypt(pubKey, mid[i]), 
+					DGKOperations.encrypt(pubKey, mid[i])));
+			System.out.println(Niu.Protocol4(DGKOperations.encrypt(pubKey, high[i]), 
+					DGKOperations.encrypt(pubKey, mid[i])));
+		}
+		
+		// Division Test, Paillier
+		// REMEMBER THE OUTPUT IS THE ENCRYPTED ANSWER, ONLY BOB CAN VERIFY THE ANSWER
+		Niu.setDGKMode(false);
+		System.out.println("Division Tests...Paillier");
+		BigInteger d = DGKOperations.encrypt(pubKey, 100);
+
+		Niu.setDGKMode(true);
+		System.out.println("Division Tests...DGK");
+		Niu.division(d, 2);//100/2 = 50
+		Niu.division(d, 3);//100/3 = 33
+		Niu.division(d, 4);//100/4 = 25
+		Niu.division(d, 5);//100/5 = 20
+		Niu.division(d, 25);//100/25 = 4
+	}
+
 	
 	public static void bob_demo() throws ClassNotFoundException, IOException
 	{
