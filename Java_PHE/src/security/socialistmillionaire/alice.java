@@ -112,6 +112,7 @@ public final class alice extends socialist_millionaires implements Runnable
 	}
 	
 	public PaillierPublicKey getPaiilierPublicKey()
+	public PaillierPublicKey getPaillierPublicKey()
 	{
 		return pk;
 	}

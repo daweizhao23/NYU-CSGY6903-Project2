@@ -91,7 +91,7 @@ public class Main
 				System.out.println("Alice Socket Set");
 				
 				// TO BE CONSISTENT I NEED TO USE KEYS FROM BOB!
-				pk = Niu.getPaiilierPublicKey();
+				pk = Niu.getPaillierPublicKey();
 				pubKey = Niu.getDGKPublicKey();
 				e_pk = Niu.getElGamalPublicKey();
 				
