@@ -142,8 +142,8 @@ public class Main
 				
 				// Stress Test
 				System.out.println("Running operations " + SIZE + " times each");
-				GM_Test();
-				// Paillier_Test();
+				//GM_Test();
+				Paillier_Test();
 				// DGK_Test();
 				//ElGamal_Test();
 				//System.exit(0);
@@ -1100,7 +1100,7 @@ public class Main
 		start = System.nanoTime();
 		for(int i = 0; i < SIZE; i++)
 		{
-			PaillierCipher.decrypt(t, sk);	
+			System.out.println(PaillierCipher.decrypt(t, sk));	
 		}
 		System.out.println("Time to complete decryption: " + ((System.nanoTime() - start)/BILLION) + " seconds");
 		

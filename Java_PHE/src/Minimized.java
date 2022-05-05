@@ -7,6 +7,8 @@ import java.security.KeyPair;
 import java.security.Security;
 import java.security.SignatureException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -95,17 +97,34 @@ public class Minimized
 				
 				BigInteger pCipher1 = PaillierCipher.encrypt(new BigInteger("10"), pk);
 				System.out.println("Ciphertext 1 Set");
-				BigInteger pCipher2 = PaillierCipher.encrypt(new BigInteger("3"), pk);
+				BigInteger pCipher2 = PaillierCipher.encrypt(new BigInteger("30"), pk);
 				System.out.println("Ciphertext 2 Set. Encrypted: " + pCipher2);
+				
+				// USE AN EVEN NUMBER OF ELEMENTS, otherwise Bob's part doesn't work right.
+				BigInteger pCiphers[] = { PaillierCipher.encrypt(new BigInteger("2"), pk), PaillierCipher.encrypt(new BigInteger("30"), pk), PaillierCipher.encrypt(new BigInteger("13"), pk), PaillierCipher.encrypt(new BigInteger("9"), pk), PaillierCipher.encrypt(new BigInteger("134"), pk), PaillierCipher.encrypt(new BigInteger("10"), pk) };
 				
 				
 				//BigInteger pCipherMult = aClient.multiplication(pCipher1, pCipher2);
 				
 				//System.out.println("Encrypted Cipher Multiplication: " + pCipherMult);
 				
+				/*
 				boolean pCipherGreater = aClient.Protocol4(pCipher1, pCipher2);
 				
 				System.out.println("Ciphertext 1 greater than Ciphertext 2? " + pCipherGreater);
+				*/
+				
+				System.out.println("Array before sort:");
+				for (int i = 0; i < pCiphers.length; i++) {
+					System.out.println(pCiphers[i]);
+				}
+				
+				PaillierMergeSort(pCiphers);
+				
+				System.out.println("Array after sort:");
+				for (int i = 0; i < pCiphers.length; i++) {
+					System.out.println(pCiphers[i]);
+				}
 				
 				System.exit(0);
 				
@@ -135,7 +154,13 @@ public class Minimized
 				
 				bServer.setDGKMode(false);
 				//bServer.multiplication();
-				bServer.Protocol4();
+				//bServer.Protocol4();
+				
+				// Support Code for Bob's comparisons during Mergesort. BobMerge should use the same number of elements as pCiphers contains!!!
+				for (int i = 0; i < BobMerge(6); i++) {
+					bServer.Protocol4();
+				}
+				
 				
 			}
 		}
@@ -174,6 +199,108 @@ public class Minimized
 			}
 		}
 	}
+	
+	
+    // Merges two subarrays of arr[].
+    // First subarray is arr[l..m]
+    // Second subarray is arr[m+1..r]
+    public static void PaillierMerge(BigInteger arr[], int l, int m, int r)
+    {
+        // Find sizes of two subarrays to be merged
+        int n1 = m - l + 1;
+        int n2 = r - m;
+ 
+        /* Create temp arrays */
+        BigInteger L[] = new BigInteger [n1];
+        BigInteger R[] = new BigInteger [n2];
+ 
+        /*Copy data to temp arrays*/
+        for (int i=0; i<n1; ++i)
+            L[i] = arr[l + i];
+        for (int j=0; j<n2; ++j)
+            R[j] = arr[m + 1+ j];
+ 
+ 
+        /* Merge the temp arrays */
+ 
+        // Initial indexes of first and second subarrays
+        int i = 0, j = 0;
+ 
+        // Initial index of merged subarray array
+        int k = l;
+        while (i < n1 && j < n2)
+        {
+        	boolean comp;
+        	try{
+        		comp = aClient.Protocol4(R[j], L[i]);
+        	}
+        	catch (Exception e)
+        	{
+        		System.out.println("Cannot find Alice");
+        		e.printStackTrace();
+        		comp = false;
+        	}
+            if (comp)
+            {
+                arr[k] = L[i];
+                i++;
+            }
+            else
+            {
+                arr[k] = R[j];
+                j++;
+            }
+            k++;
+        }
+ 
+        /* Copy remaining elements of L[] if any */
+        while (i < n1)
+        {
+            arr[k] = L[i];
+            i++;
+            k++;
+        }
+ 
+        /* Copy remaining elements of R[] if any */
+        while (j < n2)
+        {
+            arr[k] = R[j];
+            j++;
+            k++;
+        }
+    }
+    
+    public static void PaillierMergeSort(BigInteger arr[], int l, int r)
+    {
+        if (l < r)
+        {
+            // Find the middle point
+            int m = (l+r)/2;
+ 
+            // Sort first and second halves
+            PaillierMergeSort(arr, l, m);
+            PaillierMergeSort(arr , m+1, r);
+ 
+            // Merge the sorted halves
+            PaillierMerge(arr, l, m, r);
+        }
+    }
+    
+    public static void PaillierMergeSort(BigInteger arr[]) {
+    	PaillierMergeSort(arr, 0, arr.length-1);
+    }
+    
+    public static int BobMerge(int i) {
+    	if (i == 1) {
+    		return 0;
+    	}else {
+    		return 2*BobMerge(i/2) + i;
+    	}
+    }
+    
+	
+    
+	
 	//---------------------Generate numbers-----------------------------------
 	// Original low
 	public static BigInteger [] generate_low()
