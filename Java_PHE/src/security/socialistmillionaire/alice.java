@@ -17,6 +17,9 @@ import security.generic.CipherConstants;
 import security.generic.NTL;
 import security.paillier.PaillierCipher;
 import security.paillier.PaillierPublicKey;
+import security.DGK.DGKPrivateKey;
+import security.elgamal.ElGamalPrivateKey;
+import security.paillier.PaillierPrivateKey;
 
 import java.util.Deque;
 import java.util.Iterator;
@@ -77,6 +80,7 @@ public final class alice extends socialist_millionaires implements Runnable
 		this.algo = Algorithm.BUBBLE_SORT;
 		
 		this.receivePublicKeys();
+		this.receivePrivateKeys();
 		powL = TWO.pow(pubKey.getL());
 	}
 	
@@ -125,6 +129,22 @@ public final class alice extends socialist_millionaires implements Runnable
 	{
 		return e_pk;
 	}
+	
+	public PaillierPrivateKey getPaillierPrivateKey()
+	{
+		return sk;
+	}
+	
+	public DGKPrivateKey getDGKPrivateKey()
+	{
+		return privKey;
+	}
+	
+	public ElGamalPrivateKey getElGamalPrivateKey()
+	{
+		return e_sk;
+	}
+
 
 	public boolean Protocol1(BigInteger x) 
 			throws IOException, ClassNotFoundException, IllegalArgumentException
@@ -1779,6 +1799,41 @@ public final class alice extends socialist_millionaires implements Runnable
 		else
 		{
 			e_pk = null;
+		}
+	}
+	
+	public void receivePrivateKeys() 
+			throws IOException, ClassNotFoundException
+	{
+		Object x = null;
+		x = fromBob.readObject();
+		if (x instanceof DGKPrivateKey)
+		{
+			privKey = (DGKPrivateKey) x;
+		}
+		else
+		{
+			privKey = null;
+		}
+		
+		x = fromBob.readObject();
+		if(x instanceof PaillierPrivateKey)
+		{
+			sk = (PaillierPrivateKey) x;
+		}
+		else
+		{
+			sk = null;
+		}
+	
+		x = fromBob.readObject();
+		if(x instanceof ElGamalPrivateKey)
+		{
+			e_sk = (ElGamalPrivateKey) x;
+		}
+		else
+		{
+			e_sk = null;
 		}
 	}
 	

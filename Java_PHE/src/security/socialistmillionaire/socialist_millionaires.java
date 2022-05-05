@@ -6,6 +6,9 @@ import java.security.SecureRandom;
 import security.DGK.DGKPublicKey;
 import security.elgamal.ElGamalPublicKey;
 import security.paillier.PaillierPublicKey;
+import security.DGK.DGKPrivateKey;
+import security.elgamal.ElGamalPrivateKey;
+import security.paillier.PaillierPrivateKey;
 
 public abstract class socialist_millionaires 
 {
@@ -25,6 +28,9 @@ public abstract class socialist_millionaires
 	protected PaillierPublicKey pk = null;
 	protected DGKPublicKey pubKey = null;
 	protected ElGamalPublicKey e_pk = null;
+	protected PaillierPrivateKey sk = null;
+	protected DGKPrivateKey privKey = null;
+	protected ElGamalPrivateKey e_sk = null;
 	
 	// Both use 2^l
     protected BigInteger powL;

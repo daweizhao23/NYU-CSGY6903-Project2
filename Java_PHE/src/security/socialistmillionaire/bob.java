@@ -42,9 +42,9 @@ Improving the DGK Comparison Protocol (2012)
 public final class bob extends socialist_millionaires implements Runnable
 {   
 	// Only Bob has private keys
-	private PaillierPrivateKey sk = null;
-	private DGKPrivateKey privKey = null;
-	private ElGamalPrivateKey e_sk = null;
+	//private PaillierPrivateKey sk = null;
+	//private DGKPrivateKey privKey = null;
+	//private ElGamalPrivateKey e_sk = null;
 
 	private ObjectOutputStream toAlice = null;
 	private ObjectInputStream fromAlice = null;
@@ -113,6 +113,7 @@ public final class bob extends socialist_millionaires implements Runnable
 		}
 
 		this.sendPublicKeys();
+		this.sendPrivateKeys();
 		powL = TWO.pow(pubKey.getL());
 	}
 
@@ -1008,6 +1009,35 @@ public final class bob extends socialist_millionaires implements Runnable
 		if(e_pk != null)
 		{
 			toAlice.writeObject(e_pk);
+		}
+		else
+		{
+			toAlice.writeObject(BigInteger.ZERO);
+		}
+		toAlice.flush();
+	}
+	
+	public void sendPrivateKeys() throws IOException
+	{
+		if(privKey != null)
+		{
+			toAlice.writeObject(privKey);
+		}
+		else
+		{
+			toAlice.writeObject(BigInteger.ZERO);
+		}
+		if(sk != null)
+		{
+			toAlice.writeObject(sk);	
+		}
+		else
+		{
+			toAlice.writeObject(BigInteger.ZERO);
+		}
+		if(e_sk != null)
+		{
+			toAlice.writeObject(e_sk);
 		}
 		else
 		{

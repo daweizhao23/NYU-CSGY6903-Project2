@@ -88,17 +88,24 @@ public class Minimized
 				
 				// TO BE CONSISTENT I NEED TO USE KEYS FROM BOB!
 				pk = aClient.getPaillierPublicKey();
+				sk = aClient.getPaillierPrivateKey();
 				System.out.println("Pallier Key Received");
+				
+				/*
 				pubKey = aClient.getDGKPublicKey();
+				privKey = aClient.getDGKPrivateKey();
 				
 				System.out.println("DGK Key Received");
+				*/
 				aClient.setDGKMode(false);
 				System.out.println("DGK Mode: " + aClient.isDGK());
 				
+				/*
 				BigInteger pCipher1 = PaillierCipher.encrypt(new BigInteger("10"), pk);
 				System.out.println("Ciphertext 1 Set");
 				BigInteger pCipher2 = PaillierCipher.encrypt(new BigInteger("30"), pk);
 				System.out.println("Ciphertext 2 Set. Encrypted: " + pCipher2);
+				*/
 				
 				// USE AN EVEN NUMBER OF ELEMENTS, otherwise Bob's part doesn't work right.
 				BigInteger pCiphers[] = { PaillierCipher.encrypt(new BigInteger("2"), pk), PaillierCipher.encrypt(new BigInteger("30"), pk), PaillierCipher.encrypt(new BigInteger("13"), pk), PaillierCipher.encrypt(new BigInteger("9"), pk), PaillierCipher.encrypt(new BigInteger("134"), pk), PaillierCipher.encrypt(new BigInteger("10"), pk) };
@@ -114,16 +121,16 @@ public class Minimized
 				System.out.println("Ciphertext 1 greater than Ciphertext 2? " + pCipherGreater);
 				*/
 				
-				System.out.println("Array before sort:");
+				System.out.println("Encrypted array before sort:");
 				for (int i = 0; i < pCiphers.length; i++) {
 					System.out.println(pCiphers[i]);
 				}
 				
 				PaillierMergeSort(pCiphers);
 				
-				System.out.println("Array after sort:");
+				System.out.println("Decrypted array after sort:");
 				for (int i = 0; i < pCiphers.length; i++) {
-					System.out.println(pCiphers[i]);
+					System.out.println(PaillierCipher.decrypt(pCiphers[i], sk));
 				}
 				
 				System.exit(0);
