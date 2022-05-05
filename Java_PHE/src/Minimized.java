@@ -108,7 +108,12 @@ public class Minimized
 				*/
 				
 				// USE AN EVEN NUMBER OF ELEMENTS, otherwise Bob's part doesn't work right.
-				BigInteger pCiphers[] = { PaillierCipher.encrypt(new BigInteger("2"), pk), PaillierCipher.encrypt(new BigInteger("30"), pk), PaillierCipher.encrypt(new BigInteger("13"), pk), PaillierCipher.encrypt(new BigInteger("9"), pk), PaillierCipher.encrypt(new BigInteger("134"), pk), PaillierCipher.encrypt(new BigInteger("10"), pk) };
+				BigInteger pCiphers[] = { PaillierCipher.encrypt(new BigInteger("6"), pk),
+						PaillierCipher.encrypt(new BigInteger("36"), pk),
+						PaillierCipher.encrypt(new BigInteger("12"), pk),
+						PaillierCipher.encrypt(new BigInteger("24"), pk),
+						PaillierCipher.encrypt(new BigInteger("126"), pk),
+						PaillierCipher.encrypt(new BigInteger("18"), pk) };
 				
 				
 				//BigInteger pCipherMult = aClient.multiplication(pCipher1, pCipher2);
@@ -121,17 +126,39 @@ public class Minimized
 				System.out.println("Ciphertext 1 greater than Ciphertext 2? " + pCipherGreater);
 				*/
 				
+				/*
 				System.out.println("Encrypted array before sort:");
 				for (int i = 0; i < pCiphers.length; i++) {
 					System.out.println(pCiphers[i]);
 				}
+				*/
+				BigInteger average = pCiphers[0];
+				int avgI = 1;
+				while (avgI < pCiphers.length) {
+					average = PaillierCipher.add(average, pCiphers[avgI], pk);
+					avgI++;
+				}
+				average = PaillierCipher.divide(average, avgI, pk);
+				
+				System.out.println("Average value: " + PaillierCipher.decrypt(average, sk));
 				
 				PaillierMergeSort(pCiphers);
 				
-				System.out.println("Decrypted array after sort:");
+				
+				/*System.out.println("Decrypted array after sort:");
 				for (int i = 0; i < pCiphers.length; i++) {
 					System.out.println(PaillierCipher.decrypt(pCiphers[i], sk));
+				}*/
+				
+				System.out.println("Min value: " + PaillierCipher.decrypt(pCiphers[0], sk));
+				System.out.println("Max value: " + PaillierCipher.decrypt(pCiphers[pCiphers.length-1], sk));
+				BigInteger median = null;
+				if (pCiphers.length % 2 == 0) {
+					median = PaillierCipher.divide(PaillierCipher.add(pCiphers[(pCiphers.length/2)-1], pCiphers[(pCiphers.length/2)], pk),2,pk);
+				} else {
+					median = pCiphers[(pCiphers.length/2)];
 				}
+				System.out.println("Median value: " + PaillierCipher.decrypt(median, sk));
 				
 				System.exit(0);
 				
@@ -143,7 +170,7 @@ public class Minimized
 				gen.initialize(KEY_SIZE, null);
 				KeyPair DGK = gen.generateKeyPair();
 				pubKey = (DGKPublicKey) DGK.getPublic();
-				privKey = (DGKPrivateKey) DGK.getPrivate();
+				privKey = (DGKPrivateKey) DGK.getPrivaste();
 				
 				// Build Paillier Keys
 				PaillierKeyPairGenerator p = new PaillierKeyPairGenerator();
