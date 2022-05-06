@@ -8,6 +8,8 @@ import java.security.Security;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.FileReader;
+import com.opencsv.*;
 
 import security.DGK.DGKKeyPairGenerator;
 import security.DGK.DGKOperations;
@@ -71,6 +73,7 @@ public class Main
 	
 	public static void main(String [] args)
 	{
+		int[] age_array = readDataLineByLine("../data/healthcare-dataset-stroke-data.csv", 2);
 		Security.addProvider(new DGKProvider());
 		Security.addProvider(new PaillierProvider());
 		Security.addProvider(new ElGamalProvider());
@@ -1249,5 +1252,36 @@ public class Main
 			GMCipher.decrypt(enc_t, gm_sk);
 		}
 		System.out.println("Time to complete decryption: " + ((System.nanoTime() - start)/BILLION) + " seconds");
+	}
+	
+	// Java code to illustrate reading a
+	// CSV file line by line
+	public static int[] readDataLineByLine(String file, int col)
+	{
+		int[] array = new int[5110];
+	    try {
+	    	
+	        // Create an object of filereader
+	        // class with CSV file as a parameter.
+	        FileReader filereader = new FileReader(file);
+	 
+	        // create csvReader object passing
+	        // file reader as a parameter
+	        CSVReader csvReader = new CSVReader(filereader);
+	        String[] nextRecord;
+	 
+	        // we are going to read data line by line
+	        nextRecord = csvReader.readNext();
+	        int i = 0;
+	        while ((nextRecord = csvReader.readNext()) != null) {
+	        	array[i] = (int) Double.parseDouble(nextRecord[col]);
+	        	i = i + 1;
+	        }
+	    }
+	    catch (Exception e) {
+	        e.printStackTrace();
+	    }
+		return array;
+	    
 	}
 }

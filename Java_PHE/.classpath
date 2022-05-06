@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/daweizhao/Desktop/NYU_Courses/Cryptography/Project_2/Java/1.5/lib/opencsv-5.6.jar"/>
+	<classpathentry kind="lib" path="/Users/daweizhao/Desktop/NYU_Courses/Cryptography/Project_2/Java/1.5/lib/commons-beanutils-1.9.4.jar"/>
+	<classpathentry kind="lib" path="/Users/daweizhao/Desktop/NYU_Courses/Cryptography/Project_2/Java/1.5/lib/commons-collections-3.2.2.jar"/>
+	<classpathentry kind="lib" path="/Users/daweizhao/Desktop/NYU_Courses/Cryptography/Project_2/Java/1.5/lib/commons-collections4-4.4.jar"/>
+	<classpathentry kind="lib" path="/Users/daweizhao/Desktop/NYU_Courses/Cryptography/Project_2/Java/1.5/lib/commons-lang3-3.12.0.jar"/>
+	<classpathentry kind="lib" path="/Users/daweizhao/Desktop/NYU_Courses/Cryptography/Project_2/Java/1.5/lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="/Users/daweizhao/Desktop/NYU_Courses/Cryptography/Project_2/Java/1.5/lib/commons-text-1.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
