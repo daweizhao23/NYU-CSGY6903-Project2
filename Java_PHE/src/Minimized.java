@@ -170,7 +170,7 @@ public class Minimized
 				gen.initialize(KEY_SIZE, null);
 				KeyPair DGK = gen.generateKeyPair();
 				pubKey = (DGKPublicKey) DGK.getPublic();
-				privKey = (DGKPrivateKey) DGK.getPrivaste();
+				privKey = (DGKPrivateKey) DGK.getPrivate();
 				
 				// Build Paillier Keys
 				PaillierKeyPairGenerator p = new PaillierKeyPairGenerator();
