@@ -68,7 +68,7 @@ public class Minimized
 	
 	public static void main(String [] args)
 	{
-		BigInteger[] age_array = csv.readDataLineByLine(2);
+		BigInteger[] data_array = csv.readDataLineByLine(8, 500);
 		
 		Security.addProvider(new DGKProvider());
 		Security.addProvider(new PaillierProvider());
@@ -96,48 +96,49 @@ public class Minimized
 				aClient.setDGKMode(false);
 				System.out.println("DGK Mode: " + aClient.isDGK());
 				
-
-				
-				// USE AN EVEN NUMBER OF ELEMENTS, otherwise Bob's part doesn't work right.
-//				BigInteger pCiphers[] = { PaillierCipher.encrypt(new BigInteger("6"), pk),
+//				// USE AN EVEN NUMBER OF ELEMENTS, otherwise Bob's part doesn't work right.
+//				BigInteger pCiphers_test[] = { PaillierCipher.encrypt(new BigInteger("6"), pk),
 //						PaillierCipher.encrypt(new BigInteger("36"), pk),
 //						PaillierCipher.encrypt(new BigInteger("12"), pk),
 //						PaillierCipher.encrypt(new BigInteger("24"), pk),
 //						PaillierCipher.encrypt(new BigInteger("126"), pk),
 //						PaillierCipher.encrypt(new BigInteger("18"), pk) };
 				int i;
-				BigInteger[] pCiphers = new BigInteger[age_array.length];
-				for (i = 0; i < age_array.length; i++) {
-					System.out.println(age_array[i]);
-					pCiphers[i] = PaillierCipher.encrypt(age_array[i], pk);
-					System.out.println(pCiphers[i]);
+				long startTime = System.currentTimeMillis();
+				System.out.println("Encrypting...");
+				BigInteger[] pCiphers = new BigInteger[data_array.length];
+				for (i = 0; i < data_array.length; i++) {
+					pCiphers[i] = PaillierCipher.encrypt(data_array[i], pk);
 		        }
-			
-				BigInteger average = pCiphers[0];
+				long encryption_endTime = System.currentTimeMillis();
+				System.out.println("Summing...");
+				BigInteger sum = pCiphers[0];
 				int avgI = 1;
 				while (avgI < pCiphers.length) {
-					average = PaillierCipher.add(average, pCiphers[avgI], pk);
+					sum = PaillierCipher.add(sum, pCiphers[avgI], pk);
 					avgI++;
 				}
-				average = PaillierCipher.divide(average, avgI, pk);
-				
-				System.out.println("Average value: " + PaillierCipher.decrypt(average, sk));
-				
+				long sum_endTime = System.currentTimeMillis();
+				System.out.println("Sorting...");
 				PaillierMergeSort(pCiphers);
-				
-				
-			
-				System.out.println("Min value: " + PaillierCipher.decrypt(pCiphers[0], sk));
-				//System.out.println("Min value: " + aClient.getKMin(pCiphers, 1));
-				System.out.println("Max value: " + PaillierCipher.decrypt(pCiphers[pCiphers.length-1], sk));
+				System.out.println("Decrypting...");
+				long sort_endTime = System.currentTimeMillis();
 				BigInteger median = null;
 				if (pCiphers.length % 2 == 0) {
 					median = PaillierCipher.divide(PaillierCipher.add(pCiphers[(pCiphers.length/2)-1], pCiphers[(pCiphers.length/2)], pk),2,pk);
 				} else {
 					median = pCiphers[(pCiphers.length/2)];
 				}
+				System.out.println("Sum value: " + PaillierCipher.decrypt(sum, sk));
+				System.out.println("Min value: " + PaillierCipher.decrypt(pCiphers[0], sk));
+				System.out.println("Max value: " + PaillierCipher.decrypt(pCiphers[pCiphers.length-1], sk));
 				System.out.println("Median value: " + PaillierCipher.decrypt(median, sk));
-				
+				long endTime = System.currentTimeMillis();
+				System.out.println("Total time:" + (endTime - startTime));
+				System.out.println("Encryption time:" + (encryption_endTime - startTime));
+				System.out.println("Sum time:" + (sum_endTime - encryption_endTime));
+				System.out.println("Sorting time:" + (sort_endTime - encryption_endTime));
+				System.out.println("Decryption time:" + (endTime - sort_endTime));
 				System.exit(0);
 				
 			}
@@ -290,7 +291,8 @@ public class Minimized
     {
         if (l < r)
         {
-            // Find the middle point
+        	System.out.println("MergeSorting: "+ r);
+        	// Find the middle point
             int m = (l+r)/2;
  
             // Sort first and second halves

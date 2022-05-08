@@ -5,8 +5,7 @@ import java.math.BigInteger;
 public class csv {
 // Java code to illustrate reading a
 	static String file = "../data/healthcare-dataset-stroke-data_cleaned.csv";
-	private static final int DATA_SIZE = 10; //4888 
-	public static BigInteger[] readDataLineByLine(int col)
+	public static BigInteger[] readDataLineByLine(int col, int DATA_SIZE)
 	{
 		BigInteger[] array = new BigInteger[DATA_SIZE];
 	    try {
