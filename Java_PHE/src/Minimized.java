@@ -68,7 +68,7 @@ public class Minimized
 	
 	public static void main(String [] args)
 	{
-		BigInteger[] data_array = csv.readDataLineByLine(8, 500);
+		BigInteger[] data_array = csv.readDataLineByLine(8, 1000);
 		
 		Security.addProvider(new DGKProvider());
 		Security.addProvider(new PaillierProvider());

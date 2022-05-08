@@ -97,7 +97,7 @@ class PlaintextSorting
 	public static void main(String args[])
 	{
 		long startTime = System.currentTimeMillis();
-		BigInteger[] data_array = csv.readDataLineByLine(8, 500);
+		BigInteger[] data_array = csv.readDataLineByLine(8, 1000);
 		MergeSort(data_array);
 		long endTime = System.currentTimeMillis();
 		System.out.println("Sorting time:" + (endTime - startTime));
