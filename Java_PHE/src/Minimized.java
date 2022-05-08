@@ -68,6 +68,8 @@ public class Minimized
 	
 	public static void main(String [] args)
 	{
+		BigInteger[] age_array = csv.readDataLineByLine(2);
+		
 		Security.addProvider(new DGKProvider());
 		Security.addProvider(new PaillierProvider());
 
@@ -108,14 +110,18 @@ public class Minimized
 				*/
 				
 				// USE AN EVEN NUMBER OF ELEMENTS, otherwise Bob's part doesn't work right.
-				BigInteger pCiphers[] = { PaillierCipher.encrypt(new BigInteger("6"), pk),
-						PaillierCipher.encrypt(new BigInteger("36"), pk),
-						PaillierCipher.encrypt(new BigInteger("12"), pk),
-						PaillierCipher.encrypt(new BigInteger("24"), pk),
-						PaillierCipher.encrypt(new BigInteger("126"), pk),
-						PaillierCipher.encrypt(new BigInteger("18"), pk) };
-				
-				
+//				BigInteger pCiphers[] = { PaillierCipher.encrypt(new BigInteger("6"), pk),
+//						PaillierCipher.encrypt(new BigInteger("36"), pk),
+//						PaillierCipher.encrypt(new BigInteger("12"), pk),
+//						PaillierCipher.encrypt(new BigInteger("24"), pk),
+//						PaillierCipher.encrypt(new BigInteger("126"), pk),
+//						PaillierCipher.encrypt(new BigInteger("18"), pk) };
+				int i;
+				BigInteger[] pCiphers = new BigInteger[age_array.length];
+				for (i = 0; i < age_array.length; i++) {
+					System.out.println(age_array[i]);
+					pCiphers[i] = PaillierCipher.encrypt(age_array[i], pk);
+		        }
 				//BigInteger pCipherMult = aClient.multiplication(pCipher1, pCipher2);
 				
 				//System.out.println("Encrypted Cipher Multiplication: " + pCipherMult);
@@ -151,6 +157,7 @@ public class Minimized
 				}*/
 				
 				System.out.println("Min value: " + PaillierCipher.decrypt(pCiphers[0], sk));
+				//System.out.println("Min value: " + aClient.getKMin(pCiphers, 1));
 				System.out.println("Max value: " + PaillierCipher.decrypt(pCiphers[pCiphers.length-1], sk));
 				BigInteger median = null;
 				if (pCiphers.length % 2 == 0) {

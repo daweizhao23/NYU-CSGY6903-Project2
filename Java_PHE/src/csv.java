@@ -1,13 +1,14 @@
 import java.io.FileReader;
 import com.opencsv.CSVReader;
+import java.math.BigInteger;
 
 public class csv {
 // Java code to illustrate reading a
-	static String file = "../data/healthcare-dataset-stroke-data.csv";
-	
-	public static int[] readDataLineByLine(int col)
+	static String file = "../data/healthcare-dataset-stroke-data_cleaned.csv";
+	private static final int DATA_SIZE = 10; //4888 
+	public static BigInteger[] readDataLineByLine(int col)
 	{
-		int[] array = new int[5110];
+		BigInteger[] array = new BigInteger[DATA_SIZE];
 	    try {
 	    	
 	        // Create an object of filereader
@@ -22,8 +23,9 @@ public class csv {
 	        // we are going to read data line by line
 	        nextRecord = csvReader.readNext();
 	        int i = 0;
-	        while ((nextRecord = csvReader.readNext()) != null) {
-	        	array[i] = (int) Double.parseDouble(nextRecord[col]);
+	        while ((nextRecord = csvReader.readNext()) != null && i < DATA_SIZE) {
+	        	int int_val = (int) Double.parseDouble(nextRecord[col]);
+	        	array[i] = BigInteger.valueOf(int_val);
 	        	i = i + 1;
 	        }
 	        
