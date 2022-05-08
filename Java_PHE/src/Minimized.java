@@ -92,22 +92,11 @@ public class Minimized
 				pk = aClient.getPaillierPublicKey();
 				sk = aClient.getPaillierPrivateKey();
 				System.out.println("Pallier Key Received");
-				
-				/*
-				pubKey = aClient.getDGKPublicKey();
-				privKey = aClient.getDGKPrivateKey();
-				
-				System.out.println("DGK Key Received");
-				*/
+
 				aClient.setDGKMode(false);
 				System.out.println("DGK Mode: " + aClient.isDGK());
 				
-				/*
-				BigInteger pCipher1 = PaillierCipher.encrypt(new BigInteger("10"), pk);
-				System.out.println("Ciphertext 1 Set");
-				BigInteger pCipher2 = PaillierCipher.encrypt(new BigInteger("30"), pk);
-				System.out.println("Ciphertext 2 Set. Encrypted: " + pCipher2);
-				*/
+
 				
 				// USE AN EVEN NUMBER OF ELEMENTS, otherwise Bob's part doesn't work right.
 //				BigInteger pCiphers[] = { PaillierCipher.encrypt(new BigInteger("6"), pk),
@@ -121,23 +110,9 @@ public class Minimized
 				for (i = 0; i < age_array.length; i++) {
 					System.out.println(age_array[i]);
 					pCiphers[i] = PaillierCipher.encrypt(age_array[i], pk);
-		        }
-				//BigInteger pCipherMult = aClient.multiplication(pCipher1, pCipher2);
-				
-				//System.out.println("Encrypted Cipher Multiplication: " + pCipherMult);
-				
-				/*
-				boolean pCipherGreater = aClient.Protocol4(pCipher1, pCipher2);
-				
-				System.out.println("Ciphertext 1 greater than Ciphertext 2? " + pCipherGreater);
-				*/
-				
-				/*
-				System.out.println("Encrypted array before sort:");
-				for (int i = 0; i < pCiphers.length; i++) {
 					System.out.println(pCiphers[i]);
-				}
-				*/
+		        }
+			
 				BigInteger average = pCiphers[0];
 				int avgI = 1;
 				while (avgI < pCiphers.length) {
@@ -151,11 +126,7 @@ public class Minimized
 				PaillierMergeSort(pCiphers);
 				
 				
-				/*System.out.println("Decrypted array after sort:");
-				for (int i = 0; i < pCiphers.length; i++) {
-					System.out.println(PaillierCipher.decrypt(pCiphers[i], sk));
-				}*/
-				
+			
 				System.out.println("Min value: " + PaillierCipher.decrypt(pCiphers[0], sk));
 				//System.out.println("Min value: " + aClient.getKMin(pCiphers, 1));
 				System.out.println("Max value: " + PaillierCipher.decrypt(pCiphers[pCiphers.length-1], sk));
@@ -194,14 +165,18 @@ public class Minimized
 				bServer = new bob(bob_client, pe, DGK);
 				
 				bServer.setDGKMode(false);
-				//bServer.multiplication();
-				//bServer.Protocol4();
 				
 				// Support Code for Bob's comparisons during Mergesort. BobMerge should use the same number of elements as pCiphers contains!!!
-				for (int i = 0; i < BobMerge(6); i++) {
+				
+				while (true) {
 					bServer.Protocol4();
 				}
 				
+				/*
+				for (int i = 0; i < BobMerge(6); i++) {
+					bServer.Protocol4();
+				}
+				*/
 				
 			}
 		}
